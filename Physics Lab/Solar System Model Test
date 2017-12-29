@@ -1,0 +1,170 @@
+#William Tennis
+
+from __future__ import division
+from visual import*
+
+scene.width =800
+scene.height = 800
+scene.autoscale=1
+
+G = 6.7e-11    #gravity
+
+#DECLARE MASSES
+mEarth = 5.972e24 #mass of earth
+mMoon = 7.34767309e22   #mass of moon
+mSun = 1.989e30
+#mMercury = 3.285e23
+#mVenus = 4.867e24
+
+#mcraft = 1.5e4  #mass of craft
+
+deltat = 10
+
+a=8
+if a<4:
+    sphere(color=color.green)
+box(pos=vector(3,3,0), color=color.cyan)
+
+#DECLARE SUN AND PLANETS
+Sun = sphere(pos=vector(0,0,0), radius=696.3e6, color=color.yellow)
+#Mercury = sphere(pos=vector(57.91e9,0,0), radius=2.44e6, color=color.orange)
+#Venus = sphere(pos=vector(108.2e9,0,0), radius=6.052e6, color=color.green)
+Earth = sphere(pos=vector(149.8e9,0,0), radius=6.4e6, color=color.cyan) 
+Moon = sphere(pos=vector (149.8e9+384.4e6,0,0), radius= 1.75e6, color=color.white)
+
+scene.center=Sun.pos
+
+#craft = sphere(pos=vector(-10*Earth.radius,0,0), radius=1e6, color=color.yellow)
+
+#DECLARE TRAILS
+#trailMercury = curve(color=Mercury.color)
+#trailVenus = curve(color=Venus.color)
+trailEarth = curve(color=Earth.color)
+trailMoon = curve(color=Moon.color)
+
+#DECLARE FORCE ARROWS
+#FarrowEarth = arrow(color=color.blue)
+#FarrowMoon = arrow(color=color.green)
+
+#DECLARE MOMENTUM ARROWS
+#parrowMerc = arrow(color=Mercury.color) #momentum vector
+#parrowVenus = arrow(color=Venus.color)
+#parrowEarth = arrow(color=Earth.color)
+#parrowMoon = arrow(color=Moon.color)
+
+#VELOCITY
+#vMercury = vector(0,47.4e3,0)
+#vVenus = vector(0,10.36e3,0)
+vEarth = vector(0,30e3,0)
+vMoon = vector(0,1.022e3+30e3,0)
+
+#vcraft = vector(0,3462.7,0) #velocity vector  #3462.5
+#pcraft = vcraft*mcraft
+
+#DEFINE INITIAL MOMENTUM
+#pMercury = vMercury*mMercury
+pEarth = vEarth*mEarth
+pMoon = vMoon*mMoon
+
+t = 0
+
+#DECLARE RHAT VECTORS
+rhatEarthtoMoon = vector(0,0,0) #declare rhat Earth vector
+rhatMoontoEarth = vector(0,0,0) #declare rhat Moon vector
+rhatSuntoEarth = vector(0,0,0) #declare rhat vector
+rhatSuntoMoon = vector(0,0,0) #declare rhat vector
+
+
+
+sf = 100000
+
+while t < 10*365*24*60*60:
+   rate(1000000)                   
+
+   #rMercury = 
+   rEarthtoMoon = Moon.pos-Earth.pos # position vector
+   rMoontoEarth = Earth.pos-Moon.pos # position vector
+   rSuntoEarth = Earth.pos-Sun.pos
+   rSuntoMoon = Moon.pos-Sun.pos
+   
+   #parrowMoon.pos = Moon.pos # momentum arrow
+
+    #EARTH TO THE MOON
+   rmagEarthtoMoon = sqrt(rEarthtoMoon.x**2+rEarthtoMoon.y**2+rEarthtoMoon.z**2) # mag_vector rEarth
+   rhatEarthtoMoon.x = rEarthtoMoon.x/rmagEarthtoMoon
+   rhatEarthtoMoon.y = rEarthtoMoon.y/rmagEarthtoMoon
+   rhatEarthtoMoon.z = rEarthtoMoon.z/rmagEarthtoMoon
+
+    #MOON TO THE EARTH
+   rmagMoontoEarth= sqrt(rMoontoEarth.x**2+rMoontoEarth.y**2+rMoontoEarth.z**2) # mag_vector rMoon
+   rhatMoontoEarth.x = rMoontoEarth.x/rmagMoontoEarth
+   rhatMoontoEarth.y = rMoontoEarth.y/rmagMoontoEarth
+   rhatMoontoEarth.z = rMoontoEarth.z/rmagMoontoEarth
+
+   #SUN TO EARTH
+   rmagSuntoEarth= sqrt(rSuntoEarth.x**2+rSuntoEarth.y**2+rSuntoEarth.z**2)
+   rhatSuntoEarth.x = rSuntoEarth.x/rmagSuntoEarth
+   rhatSuntoEarth.y = rSuntoEarth.y/rmagSuntoEarth
+   rhatSuntoEarth.z = rSuntoEarth.z/rmagSuntoEarth
+
+    #SUN TO MOON
+   rmagSuntoMoon= sqrt(rSuntoMoon.x**2+rSuntoMoon.y**2+rSuntoMoon.z**2)
+   rhatSuntoMoon.x = rSuntoMoon.x/rmagSuntoMoon
+   rhatSuntoMoon.y = rSuntoMoon.y/rmagSuntoMoon
+   rhatSuntoMoon.z = rSuntoMoon.z/rmagSuntoMoon
+
+   
+
+##   F_grav_magSunToMercury=G*mMercury*mSun/(rmagSuntoMercury**2)# mag_gravitational force
+##   F_grav_magSunToVenus=G*mVenus*mSun/(rmagSuntoVenus**2)# mag_gravitational force
+
+
+   F_grav_magSuntoEarth=G*mEarth*mSun/(rmagSuntoEarth**2)# mag_gravitational force   
+   F_grav_magSuntoMoon=G*mMoon*mSun/(rmagSuntoMoon**2)# mag_gravitational force
+   
+##   F_grav_magMercurytoSun=G*mMercury*mSun/(rmagSuntoMercury**2)# mag_gravitational force
+##   F_grav_magMercurytoVenus=G*mVenus*mMercury/(rmagMercurytoVenus**2)# mag_gravitational force
+##   F_grav_magMercurytoEarth=G*mMercury*mEarth/(rmagMercurytoEarth**2)# mag_gravitational force
+##   F_grav_magMercurytoMoon=G*mMercury*mMoon(rmagMercurytoMoon**2)# mag_gravitational force
+##
+##   F_grav_magVenustoSun=G*mMercury*mMoon(rmagMercurytoMoon**2)# mag_gravitational force
+
+   F_grav_magEarthtoMoon=G*mMoon*mEarth/(rmagEarthtoMoon**2)# mag_gravitational force Earth
+   F_grav_magMoontoEarth=G*mEarth*mMoon/(rmagMoontoEarth**2)# mag_gravitational force Moon
+
+   FgravEarthtoMoon=-F_grav_magEarthtoMoon*rhatEarthtoMoon # grav_force Earth
+   FgravMoontoEarth=-F_grav_magMoontoEarth*rhatMoontoEarth # grav_force Moon
+   FgravSuntoEarth=-F_grav_magSuntoEarth*rhatSuntoEarth # grav_force 
+   FgravSuntoMoon=-F_grav_magSuntoMoon*rhatSuntoMoon # grav_force 
+   
+   
+
+   FnetEarth=FgravMoontoEarth+FgravSuntoEarth
+   FnetMoon=FgravEarthtoMoon+FgravSuntoMoon
+   
+##   vcraft = vcraft+(Fnet/mcraft)*deltat #velocity
+##   pcraft = pcraft+Fnet*deltat #momentum
+
+   #parrowMoon.axis = 1*pMoon
+
+## craft.pos = craft.pos + (pcraft/mcraft)*deltat
+## trail.append(pos=craft.pos)
+
+
+   vEarth = vEarth+(FnetEarth/mEarth)*deltat
+   pEarth = pEarth+FnetEarth*deltat
+   Earth.pos = Earth.pos+(pEarth/mEarth) * deltat
+   trailEarth.append(pos=Earth.pos)
+
+   vMoon = vMoon+(FnetMoon/mMoon)*deltat
+   pMoon = pMoon+FnetMoon*deltat
+   Moon.pos = Moon.pos + (pMoon/mMoon) * deltat
+   trailMoon.append(pos=Moon.pos)
+
+#   FarrowEarth.pos=Earth.pos
+#   FarrowEarth.pos=FgravMoontoEarth
+
+#   FarrowMoon.pos=Moon.pos
+#   FarrowMoon.axis=FgravEarthtoMoon
+   
+   t = t+deltat

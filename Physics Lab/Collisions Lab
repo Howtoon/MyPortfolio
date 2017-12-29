@@ -1,0 +1,79 @@
+from __future__ import division, print_function
+from visual import *
+from visual.graph import *
+scene.width = 800
+
+##Constants
+massAu = (79+118)*1.7e-27
+massAlpha = (2+2)*1.7e-27
+qAu = 2*1.6e-19
+qAlpha = 79*1.6e-19
+oofpez = vector(9e9,0,0) ## one-over-four-pi-epsilon-zero
+deltat = 1e-23
+
+#Initial Values
+pAu = massAu*vector(0,0,0)
+pAlpha = vector(1.043e-19,0,0)
+t = 0
+I=oofpez*deltat
+VAlpha= pAlpha/massAlpha
+VxAlpha= pAlpha.y/massAlpha
+VyAlpha= pAlpha.y/massAlpha
+VAu= pAu/massAu
+VxAu= pAu.x/massAu
+VyAu= pAu.y/massAu
+Vfx=(massAlpha*VxAlpha*VxAlpha)/(massAlpha+massAu)
+b = 5e-15
+
+##Objects
+Au = sphere(pos=vector(0,0,0), radius=8e-15, color=color.yellow, make_trail=True)
+Alpha = sphere(pos=vector(-1e-13,b,0), radius=2e-15, color=color.red, make_trail=True)
+
+##Graphs
+X_momentum = gdisplay(x=0,y=400,height=200)
+px_Alpha = gcurve(color=color.red)
+px_Au = gcurve(color=color.blue)
+px_total = gcurve(color=color.cyan)
+
+Y_momentum = gdisplay(x=0,y=600, height=200)
+py_Alpha = gcurve(color=color.red)
+py_Au = gcurve(color=color.blue)
+py_total = gcurve(color=color.cyan)
+
+##Force equation
+
+
+
+##Calculation Loop
+while t < 1e-20:
+    rate(1000)
+    r=Alpha.pos-Au.pos
+    rmag = mag(r)
+    rhat= vector(r/rmag)
+    F = ((qAlpha*qAu)/(rmag*rmag))*9e9*rhat
+    pAlpha = (pAlpha+(F*deltat))
+    Alpha.pos = Alpha.pos + (pAlpha/massAlpha)*deltat
+    Au.pos = Au.pos + (pAu/massAu)*deltat
+    t = t + deltat
+    VAlpha= pAlpha/massAlpha
+    VxAlpha= pAlpha.y/massAlpha
+    VyAlpha= pAlpha.y/massAlpha
+    VAu= pAu/massAu
+    VxAu= pAu.x/massAu
+    VyAu= pAu.y/massAu
+    if (mag(Alpha.pos-Au.pos)<Au.radius):
+        pAlpha=(massAlpha*massAlpha*VAlpha)/massAu
+        pAu=(massAu*massAu*VAu)/massAlpha
+    px_Alpha.plot(pos = (t,pAlpha.x))
+    px_Au.plot(pos=(t,pAu.x))
+    px_total.plot(pos = (t,pAlpha.x+pAu.x))
+    py_Alpha.plot(pos = (t,pAlpha.y))
+    py_Au.plot(pos=(t,pAu.y))
+    py_total.plot(pos=(t,pAlpha.y+pAu.y))
+        
+    
+
+# The physical system being modeled is a collision between two spheres
+# In the real world, the balls should collide and exchange momentum/energy
+# The program will not accurately model the system without changes
+

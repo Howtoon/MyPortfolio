@@ -1,0 +1,60 @@
+from __future__ import division, print_function
+from visual import *
+from visual.graph import *
+scene.width = 400
+scene.height = 760
+## constants and data
+g = 9.8
+mball = 0.03
+L0 = 0.26
+ks = 1.8
+deltat = .01
+
+#vgraph = gcurve(color = color.green)
+Kgraph = gcurve(color = color.blue)
+Ugraph = gcurve(color = color.red)
+Egraph = gcurve(color = color.yellow)
+sf=0.3
+
+## objects (origin is at ceiling)
+ceiling = box(pos=vector(0,0,0), length=0.2, height=0.01, width=0.2)
+ball = sphere(pos=(0,-.3,0), radius=0.025,
+                            color=color.orange, make_trail=True)
+spring = helix(pos=ceiling.pos, axis=ball.pos-ceiling.pos,
+                              color=color.cyan, thickness=.003, coils=40, radius=0.010)
+## initial values
+pball = mball*vector(0,0,0)
+Fgrav = mball*g*vector(0,-1,0)
+t=0
+Fnet=vector (0,0,0)
+S=vector(0,0,0)
+#bottom = box(pos=vector(0,-10,0), length=0.2, height=0.01, width=0.2)
+## improve the display
+scene.autoscale = False    #turn off automatic camera zoom
+scene.center = vector(0,-L0,0)   #move camera down
+scene.waitfor('click')    #wait for mouse click
+## calculation loop
+
+
+while t <5:
+    rate(100)
+    L= ball.pos-ceiling.pos
+    Lhat= L/mag(L)
+    S= mag(L)-L0
+    Fnet = Fgrav - (ks*S*Lhat)
+    pball = pball + Fnet*deltat
+    ball.pos = ball.pos + (pball/mball)*deltat
+    spring.axis = ball.pos - ceiling.pos
+    t = t + deltat
+ #  vgraph.plot(pos = (t,ball.y))
+    vball= pball/mball
+    Uenergy= (mball*g*(ball.pos.y)
+    Kenergy= (.5*mball*(mag(vball)*mag(vball))
+    Energy = (Uenergy + Kenergy)
+    Kgraph.plot(pos = (t, Kenergy))
+    Ugraph.plot(pos = (t, Uenergy))
+    Egraph.plot(pos = (t, Energy))
+#vgraph.plot(pos = (t,ball.y))
+Kgraph.plot(pos = (t, Kenergy))
+Ugraph.plot(pos = (t, Uenergy))
+Egraph.plot(pos = (t, Energy))

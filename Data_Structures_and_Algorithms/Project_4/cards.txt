@@ -1,0 +1,57 @@
+4 52
+Hearts
+Clubs
+Diamonds
+Spades
+Spades 14
+Spades 9
+Diamonds 5
+Clubs 3
+Hearts 9
+Hearts 2
+Spades 11
+Clubs 11
+Diamonds 3
+Diamonds 14
+Spades 7
+Hearts 3
+Clubs 7
+Spades 4
+Spades 8
+Hearts 6
+Diamonds 7
+Clubs 5
+Hearts 4
+Spades 12
+Clubs 12
+Hearts 10
+Diamonds 10
+Diamonds 11
+Hearts 11
+Diamonds 6
+Spades 2
+Diamonds 12
+Hearts 12
+Hearts 7
+Spades 13
+Diamonds 8
+Clubs 13
+Clubs 8
+Clubs 14
+Hearts 14
+Diamonds 2
+Clubs 2
+Spades 3
+Diamonds 4
+Hearts 8
+Diamonds 13
+Diamonds 9
+Hearts 13
+Clubs 4
+Spades 5
+Clubs 9
+Spades 6
+Clubs 6
+Hearts 5
+Clubs 10
+Spades 10

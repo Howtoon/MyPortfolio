@@ -1,0 +1,54 @@
+#William Tennis
+#Kiara Korkuc
+#Chris Shanley_Emmons
+
+
+from __future__ import division
+from visual import*
+
+scene.width =800
+scene.height = 800
+scene.autoscale=1
+
+G = 6.7e-11    #gravity
+mEarth = 6.7e24 #mass of earth
+mcraft = 15e3  #mass of craft
+deltat = 1
+
+a=8
+if a<4:
+    sphere(color=color.green)
+box(pos=vector(3,3,0), color=color.cyan)
+
+
+Earth = sphere(pos=vector(0,0,0), radius=6.4e6, color=color.cyan)
+
+craft = sphere(pos=vector(-10*Earth.radius,0,0), radius=1e6, color=color.yellow)
+trail = curve(color=craft.color)
+Fvector = arrow(color=color.blue)
+pvector = arrow(color=color.red) #momentum vector
+vcraft = vector(0,3000,0) #velocity vector
+pcraft = vcraft*mcraft
+t = 0
+rhat = vector(0,0,0)
+
+while t < 10*365*24*60*60:
+   rate(10000)                   
+   r = craft.pos-Earth.pos # position vector
+   pvector.pos = craft.pos # momentum arrow
+   rmag = sqrt(r.x**2+r.y**2+r.z**2) # mag_vector r
+   rhat.x = r.x/rmag
+   rhat.y = r.y/rmag
+   rhat.z = r.z/rmag
+   F_grav_mag=G*mcraft*mEarth/(rmag**2)# mag_gravitational force
+   Fgrav=-F_grav_mag*rhat # grav_force
+   vcraft = vcraft+(Fgrav/mcraft)*deltat #velocity
+   pcraft = pcraft+Fgrav*deltat #momentum
+   pvector.axis = 1*pcraft
+   craft.pos = craft.pos + (pcraft/mcraft)*deltat
+   trail.append(pos=craft.pos)
+   Fvector.pos=craft.pos
+   Fvector.axis=Fgrav*10000
+   t = t+deltat
+   if rmag < Earth.radius:
+       break

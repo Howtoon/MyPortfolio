@@ -1,0 +1,123 @@
+#William Tennis
+#Kiara Korkuc
+#Chris Shanley_Emmons
+
+
+from __future__ import division
+from visual import *
+from visual.graph import *
+
+scene.width =800
+scene.height = 800
+scene.autoscale=1
+
+G = 6.7e-11    #gravity
+mEarth = 6.7e24 #mass of earth
+mMoon = 7e22   #mass of moon
+mcraft = 1.5e4  #mass of craft
+deltat = (60)
+
+a=8
+if a<4:
+    sphere(color=color.green)
+box(pos=vector(3,3,0), color=color.cyan)
+
+
+Earth = sphere(pos=vector(0,0,0), radius=6.4e6, color=color.cyan)
+Moon = sphere (pos=vector (4e8,0,0), radius= 1.75e6, color=color.orange)
+
+scene.center=(Earth.pos+Moon.pos)/2
+
+craft = sphere(pos=vector(-10*Earth.radius,0,0), radius=1e6, color=color.yellow)
+trail = curve(color=craft.color)
+FarrowE = arrow(color=color.blue)
+#FarrowM = arrow(color=color.green)
+parrow = arrow(color=color.red) #momentum vector
+kE=gcurve(color=color.cyan)
+pE=gcurve(color=color.green)
+KplusU=gcurve(color=color.yellow)
+
+## 1 Including Effect of Moon
+## At Inital velocity 2000 km/s the crafte orbits earth in a circle
+
+## 3 Exploring Complex Trajectories
+## Initial speed that crashes into Moon 3473 km/s
+## Initial spped that leads to an elliptical orbit around both Earth and Moon 3500 km/s
+## Initial speed that yields a "figure-8" orbit that loops around the Moon before returning to Earth 3465 km/s
+## Initial speed that produces a different, interesting orbit 3450 km/s
+## Inital velocities are very sensitive the difference in velocity between hitting Earth and the moon extremly small within 0.1 km/s 
+## Range of speeds that produce a figure-8 is 5 km/s
+
+## 4 An Interesting Trajectory
+## Inital velocity of 3.27e3 produces a slightly elliptical orbit of earth
+## At 3450 km/s the craft backtracks and retraces its path because the Moon and Earth gravity force vectors counteract eachother
+##      to slow the craft to 0 and forces it to reverse its course
+
+## 5 Accuracy
+## At 2 second step size the trail becomes more accurate
+## The 10 second step size is accurate until the speed becomes very high and the curves becomes very sharp
+##      At that point, 10 seconds is too long to make accurate curves.
+## When Delta T is set to 1000 seconds, the curves become very angular
+## The large step size produces an inaccurate orbit because the position is not updated frequently enough to draw accurate curves
+## space voyage 3 questions: The shapes of the graphs follow our predictions because kinetic energy and potential energy are opposites of each other.
+## space voyage 3: The Time becomes inconsistant around between 22000 and 25000. The graph no longer follows the kinetic and potential energy once you reach that point.
+## Change velocity here
+
+
+vcraft = vector(0,3200,0) #velocity vector  
+
+
+pcraft = vcraft*mcraft
+t = 0
+rhatE = vector(0,0,0) #declare rhat Earth vector
+rhatM = vector(0,0,0) #declare rhat Moon vector
+sf = 100000
+
+while t < 365*24*60*60:
+   rate(1000)                   
+   rE = craft.pos-Earth.pos # position vector
+   rM = craft.pos-Moon.pos # position vector
+   
+   parrow.pos = craft.pos # momentum arrow
+
+   rmagE = sqrt(rE.x**2+rE.y**2+rE.z**2) # mag_vector rE
+   rhatE.x = rE.x/rmagE
+   rhatE.y = rE.y/rmagE
+   rhatE.z = rE.z/rmagE
+
+   rmagM= sqrt(rM.x**2+rM.y**2+rM.z**2) # mag_vector rM
+   rhatM.x = rM.x/rmagM
+   rhatM.y = rM.y/rmagM
+   rhatM.z = rM.z/rmagM
+
+   F_grav_magE=G*mcraft*mEarth/(rmagE**2)# mag_gravitational force Earth
+   F_grav_magM=G*mcraft*mMoon/(rmagM**2)# mag_gravitational force Moon
+
+   FgravE=-F_grav_magE*rhatE # grav_force Earth
+   FgravM=-F_grav_magM*rhatM # grav_force Moon
+
+   Fnet=FgravE+FgravM
+   
+   vcraft = vcraft+(Fnet/mcraft)*deltat #velocity
+   pcraft = pcraft+Fnet*deltat #momentum
+   parrow.axis = 1*pcraft
+
+   craft.pos = craft.pos + (pcraft/mcraft)*deltat
+   trail.append(pos=craft.pos)
+
+#   FarrowM.pos=craft.pos
+#   FarrowM.axis=FgravM*sf*10
+
+   FarrowE.pos=craft.pos
+   FarrowE.axis=FgravE*sf
+   t = t+deltat
+   K=mag2(pcraft)/(2*mcraft)   
+   U=(-1*G*mEarth*mcraft)/mag(rE)
+   kE.plot(pos=(t,K))
+   pE.plot(pos=(t,U))
+   KplusU.plot(pos=(t,K+U))
+
+   if rmagE < Earth.radius:
+       break
+   if rmagM < Moon.radius:
+       break

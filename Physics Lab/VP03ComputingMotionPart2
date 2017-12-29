@@ -1,0 +1,27 @@
+from __future__ import division, print_function
+from visual import *
+from visual.graph import *
+
+scene.width = 800   #cart scene width
+scene.y = 400       #cart scene height
+vgraph = gcurve(color=color.green) #graph window
+
+track = box(pos=vector(0,-0.05,0), length=2.0, height=0.03, width=0.10, color=color.white)#define track parameters
+cart = box(pos=vector(0,0,0), length=0.1, height=0.06, width = 0.06, color=color.cyan)#define cart parameters
+
+m_cart = 0.8                        #mass of cart
+p_cart = m_cart * vector(0.2,0,0)   #momentum of cart
+delta_t = 0.01                      #time per cycle
+t = 0                               #start time
+while t < 3:                            #total time length of loop
+    rate(50)                                    #rate of program run time
+    Fnet = vector(-0.5,0,0)                     #net force vector
+    p_cart = p_cart + Fnet * delta_t            #cart gains momentum with time
+    vgraph.plot(pos=(t, p_cart.x))
+             #graph position of cart relative to time
+    velocity = m_cart * p_cart                  #calc new velocity vector
+    cart.pos = cart.pos + velocity * delta_t
+   #update position
+    t = t + delta_t                             #update time
+        
+

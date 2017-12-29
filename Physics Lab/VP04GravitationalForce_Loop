@@ -1,0 +1,25 @@
+from __future__ import division, print_function
+from visual import *
+from visual.graph import *
+
+scene.width = 1000
+
+G=-6.7e-11
+planetMass = 1.5e4
+spaceShipMass = 6e24
+
+planet = sphere(radius=6.4e6, pos=vector(0,-2e7,0), color=color.green)
+
+i=0
+j=-13e7
+c = array([color.red,color.orange,color.blue,color.cyan,color.magenta])
+
+while i<5:
+    spaceShip1 = sphere(radius=3e6, pos=vector(j,4.5e7), color=c[i])
+    r = vector(spaceShip1.pos.x-planet.pos.x,spaceShip1.pos.y-planet.pos.y,0)
+    rMag = sqrt(r.x*r.x+r.y*r.y)
+    gravForceSpaceShip1 = (G*((planetMass*spaceShipMass)/(rMag*rMag)))
+    scaleFactor= (gravForceSpaceShip1/rMag)*30000
+    gravForce1 = arrow(pos=spaceShip1.pos , axis = (scaleFactor)*r , color = color.yellow)
+    i=i+1
+    j=j+6.5e7
